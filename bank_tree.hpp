@@ -27,10 +27,12 @@ public:
     Hash_table get_hash_table();
     Bank_node* get_root();
     std::vector<int> v;
+	void update_server_recursive(Bank_node *root, std::ofstream &write);
 private:
     // std::vector<int> v;
     Hash_table h;
     Bank_node *root;
 };
+bool file_data(const std::string& filename);
 
 #endif

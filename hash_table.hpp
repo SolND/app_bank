@@ -2,7 +2,8 @@
 #define _HASH_TABLE_HPP
 
 #include "node.hpp"
-
+#include <map>
+#
 class Hash_table
 {
 public:

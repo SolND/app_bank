@@ -54,18 +54,10 @@ void Bank_tree::load_server()
 		std::getline(read, name);
 		std::getline(read, adress);
 		read >> accountno;
-		read >> password;
+		std::getline(read, password);
 		read >> balance;
 		read.ignore();
-		read.ignore();
-/*
-		cout << name << endl;
-		cout << adress << endl;
-		cout << accountno << endl;
-		cout << password << endl;
-		cout << balance << endl;
-		
-		*/
+
 		if (name!="" && adress != "" && accountno != 0 && password != "" )
 		{
 			//cout << "enter hua" << endl;
@@ -110,34 +102,56 @@ void Bank_tree::load_server()
 	}
 	read.close();
 }
+
+bool file_data(const std::string& filename) {
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        return false; // Tệp không tồn tại hoặc không thể mở
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        if (!line.empty()) {
+            file.close();
+            return true; // Tệp tồn tại và có dữ liệu bên trong
+        }
+    }
+
+    file.close();
+    return false; // Tệp tồn tại nhưng không có dữ liệu bên trong
+}
+
 void Bank_tree:: update_server(Bank_node *root)
 {
 	static int i = 0;
 	if (i == 0)
 	{
 		i++;
-		remove("server.txt");
+		// remove("server.txt");
 	}
+
 	std::ofstream write;
 	write.open("server.txt");
-	if (root)
+	if(file_data("server.txt") == true)
 	{
-		update_server(root->get_left());
-		write << root->get_name()<<"\n";
-		write << root->get_address()<<"\n";
-		write << root->get_account_number()<<"\n";
-		write << root->get_password()<<"\n";
-		write << root->get_balance()<<"\n";
-		update_server(root->get_right());
+		if (root)
+		{
+			update_server(root->get_left());
+			write << root->get_name()<<"\n";
+			write << root->get_address()<<"\n";
+			write << root->get_account_number()<<"\n";
+			write << root->get_password()<<"\n";
+			write << root->get_balance()<<"\n";
+			update_server(root->get_right());
+		}
 	}
+
 	write.close();
-	
-	
 }
 
 void Bank_tree:: printoinfo(Bank_node* root)
 {
-
 	if (root)
 	{
 		printoinfo(root->get_left());
@@ -148,6 +162,7 @@ void Bank_tree:: printoinfo(Bank_node* root)
 		std::cout << root->get_balance()<<"\n";
 		printoinfo(root->get_right());
 	}
+	std::cout << "Danh sách tài khoản trống\n";
 }
 
 void Bank_tree::add_account(std::string name, std::string addr, int number, std::string pass, int balance)
@@ -161,7 +176,7 @@ void Bank_tree::add_account(std::string name, std::string addr, int number, std:
     Bank_node *temp = new Bank_node(name, addr, number, pass, balance);
     
     Bank_node *current = get_root();
-    if(get_root() ==nullptr)
+    if(get_root() == nullptr)
     {
         set_root(temp);
     }
@@ -195,11 +210,17 @@ void Bank_tree::add_account(std::string name, std::string addr, int number, std:
 Bank_node* Bank_tree::delete_account(Bank_node *root, int account)
 {
     if(root == nullptr)
+	{
         std::cout << "Bạn đã nhập sai dữ liệu\n";
+	}
     else if(account < root->get_account_number())
+	{
         root->set_left(delete_account(root->get_left(), account));
+	}
     else if(account > get_root()->get_account_number())
+	{
         root->set_right(delete_account(root->get_right(), account));
+	}
     else
     {
         if(root->get_left() && root->get_right())
@@ -251,8 +272,8 @@ void Bank_tree::with_draw(int accountno,int amount)
 		write << data[i]<< "\n";
 	}
 	write.close();
-	remove("transaction.txt");
-	rename("temp.txt", "transaction.txt");
+	// remove("transaction.txt");
+	// rename("temp.txt", "transaction.txt");
 	
 	update_server(get_root());
 }
@@ -288,8 +309,8 @@ void Bank_tree::deposit(int accountno,int amount)
 		write << data[i] << "\n";
 	}
 	write.close();
-	remove("transaction.txt");
-	rename("temp.txt", "transaction.txt");
+	// remove("transaction.txt");
+	// rename("temp.txt", "transaction.txt");
 
 
 	update_server(get_root());
@@ -336,8 +357,8 @@ void Bank_tree::transfer(int sender_accountno,int reciever_accountno,int sender_
 		write << data[i] << "\n";
 	}
 	write.close();
-	remove("transaction.txt");
-	rename("temp.txt", "transaction.txt");
+	// remove("transaction.txt");
+	// rename("temp.txt", "transaction.txt");
 
 
 	//  for reciever 
@@ -368,13 +389,29 @@ void Bank_tree::transfer(int sender_accountno,int reciever_accountno,int sender_
 		write1 << data1[i] << "\n";
 	}
 	write1.close();
-	remove("transaction.txt");
-	rename("temp.txt", "transaction.txt");
+	// remove("transaction.txt");
+	// rename("temp.txt", "transaction.txt");
 
 }
 void Bank_tree::transaction_history()
 {
+    std::ifstream read;
+    read.open("transaction.txt");
+
+    if (!read.is_open()) {
+        std::cout << "Không thể mở tệp lịch sử giao dịch.\n";
+        return;
+    }
+
+    std::cout << "Lịch sử giao dịch:\n";
     
+    int account_number, amount;
+    
+    while (read >> account_number >> amount) {
+        std::cout << "Tài khoản " << account_number << ": " << amount << " VNĐ\n";
+    }
+
+    read.close();
 }
 void Bank_tree:: find_max(Bank_node* root)
 {

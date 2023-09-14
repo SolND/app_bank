@@ -84,7 +84,7 @@ int Bank_node::get_account_number()
 
 int Bank_node::get_balance()
 {
-    return this->balance;
+    return this->balance; // account balance
 }
 
 Bank_node* Bank_node::get_left()

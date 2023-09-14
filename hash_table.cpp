@@ -156,34 +156,37 @@ void  Hash_table::delete_password(int accountno)
 	std::ifstream read;
 	read.open("hashtable.txt");
 	std::vector<int> vec;
-	int acc=0,pass=0;
+	std::map<int, std::string> mp;
+	int acc=0;
+	std::string pass = "";
 	int i = 0;
 	while (!read.eof())
 	{
 		i++;
 		read >> acc;
-		read >> pass;
+		std::getline(read, pass);
 		if (acc == accountno)
 		{	                                           // read both account number and password to skip them
 			continue;
 		}
-		vec.push_back(acc);
-		vec.push_back(pass);
+		// vec.push_back(acc);
+		// vec.push_back(pass);
+		mp.insert(make_pair(acc, pass));
 	}
 	read.close();
 	std::ofstream write;
 	write.open("temp.txt", std::ios::app);
 	
-		for (int i = 0; i < vec.size(); i++)
+		for (int i = 0; i < mp.size(); i++)
 		{
-			if (vec[i] != 0)
+			if (!mp[i].empty())
 			{
-				write << vec[i] << "\n";
+				write << mp[i] << "\n";
 			}
 		}
 	
 	
 	write.close();
-	remove("hashtable.txt");
-	rename("temp.txt", "hashtable.txt");
+	// remove("hashtable.txt");
+	// rename("temp.txt", "hashtable.txt");
 }

@@ -20,30 +20,30 @@ void admin()
 		{
 			string n = "", a = "", p = "";
 			int acc, b;
-			cout << "enter name" << endl;
+			cout << "Import name: ";
 			cin >> n;
-			cout << "enter adress" << endl;
+			cout << "Import adress: ";
 			cin >> a;
-			cout << "enter account number" << endl;
+			cout << "Import account number: ";
 			cin >> acc;
-			cout << "enter password" << endl;
+			cout << "Import password: ";
 			cin >> p;
-			cout << "enter balance" << endl;
+			cout << "Import balance";
 			cin >> b;
 			t.add_account(n, a, acc, p, b);
 		}
 		if (condition == 2)
 		{
 			int acc = 0;
-			cout << "enter account number" << endl;
+			cout << "Import account number: ";
 			cin >> acc;
 			t.load_server();
 			t.set_root(t.delete_account(t.get_root(), acc));
-			cout << "bar a gia delete se" << endl;
+			cout << "bar a gia delete se: ";
 			h.delete_password(acc);
-			cout << "delete pass" << endl;
+			cout << "delete pass: ";
 			t.update_server(t.get_root());
-			cout << "update h gia" << endl;
+			cout << "update h gia: ";
 		}
 		if (condition == 3)
 		{
